@@ -9,9 +9,70 @@
 #define __RODCUT_CPP__
 
 #include "RodCut.hpp"
+#include "TwoD_Array.hpp"
 #include <iostream>
 
 int rodcut(std::map<int, int> prices, int length) {
-  return 0;
+	int rows = prices.size() + 1;
+	int cols =  length + 1;
+	int max = 0;
+
+
+	//finding max in list
+	auto x = std::max_element(prices.begin(), prices.end(),
+    [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
+        return p1.second < p2.second; });
+
+	auto y = std::max_element(prices.begin(), prices.end(),
+    [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
+        return p1.second > p2.second; });
+
+
+
+	TwoD_Array<int> * arr = new TwoD_Array<int>(x->first, cols);
+
+	auto it = prices.find(y->first);
+	for(int i = 0; i <= cols; i++){
+		int value =0;
+		if(it->first <= i){
+			 value = it->second * (i - (i%it->first));
+			arr->at(it->first, i) = value;
+		}
+	}
+	it++;
+
+	int value; 
+	for(auto it2 = it; it2 != prices.end(); it2++){
+		for(int j = 0; j < cols; j++){
+			if(it2->first > j){
+				value = arr->at((prev(it2,1))->first, j);
+				if(value > max) max = value;
+				arr->at(it2->first, j) = value;
+			}
+			if(it2->first == j){
+				value = MAX(arr->at((prev(it2,1))->first, j), it2->second);
+				if(value > max) max = value;
+				arr->at(it2->first, j) = value;
+			}
+			if(it2->first < j){
+				int use = (j / it2->first) * it2->second;
+				if((j%it2->first) != 0){
+					use +=arr->at((prev(it2,1))->first, (j%it2->first));
+				}
+				value = MAX(arr->at((prev(it2,1))->first, j), use);
+				if(value > max) max = value;
+				arr->at(it2->first, j) = value;
+
+			}
+		}	
+	}
+
+	for(int i = 0; i <= arr->getNumRows(); i++){
+		for(int j = 0; j < arr->getNumCols(); j++){
+			std::cout<< arr->at(i, j) << "  ";
+		}
+		std::cout<<"\n";
+	}
+  return max;
 }
 #endif
