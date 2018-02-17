@@ -60,12 +60,14 @@ int rodcut(std::map<int, int> prices, int length) {
 		}	
 	}
 
+	/*
 	for(int i = 0; i <= arr->getNumRows(); i++){
 		for(int j = 0; j < arr->getNumCols(); j++){
 			std::cout<< arr->at(i, j) << "  ";
 		}
 		std::cout<<"\n";
 	}
+	*/
 
   return max;
 }
