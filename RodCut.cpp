@@ -23,45 +23,38 @@ int rodcut(std::map<int, int> prices, int length) {
     [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
         return p1.second < p2.second; });
 
-	auto y = std::max_element(prices.begin(), prices.end(),
-    [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
-        return p1.second > p2.second; });
-
-
 
 	TwoD_Array<int> * arr = new TwoD_Array<int>(x->first, cols);
 
-	auto it = prices.find(y->first);
+	//first length will always be 1
 	for(int i = 0; i <= cols; i++){
 		int value =0;
-		if(it->first <= i){
-			 value = it->second * (i - (i%it->first));
-			arr->at(it->first, i) = value;
+		if(1 <= i){
+			arr->at(1, i) = i;
 		}
 	}
-	it++;
 
 	int value; 
-	for(auto it2 = it; it2 != prices.end(); it2++){
+	for(auto it = next(prices.begin(),1); it != prices.end(); it++){
 		for(int j = 0; j < cols; j++){
-			if(it2->first > j){
-				value = arr->at((prev(it2,1))->first, j);
+			if(it->first > j){
+				value = arr->at((prev(it,1))->first, j);
 				if(value > max) max = value;
-				arr->at(it2->first, j) = value;
+				arr->at(it->first, j) = value;
 			}
-			if(it2->first == j){
-				value = MAX(arr->at((prev(it2,1))->first, j), it2->second);
+			if(it->first == j){
+				value = MAX(arr->at((prev(it,1))->first, j), it->second);
 				if(value > max) max = value;
-				arr->at(it2->first, j) = value;
+				arr->at(it->first, j) = value;
 			}
-			if(it2->first < j){
-				int use = (j / it2->first) * it2->second;
-				if((j%it2->first) != 0){
-					use +=arr->at((prev(it2,1))->first, (j%it2->first));
+			if(it->first < j){
+				int use = (j / it->first) * it->second;
+				if((j%it->first) != 0){
+					use +=arr->at((prev(it,1))->first, (j%it->first));
 				}
-				value = MAX(arr->at((prev(it2,1))->first, j), use);
+				value = MAX(arr->at((prev(it,1))->first, j), use);
 				if(value > max) max = value;
-				arr->at(it2->first, j) = value;
+				arr->at(it->first, j) = value;
 
 			}
 		}	
@@ -73,6 +66,7 @@ int rodcut(std::map<int, int> prices, int length) {
 		}
 		std::cout<<"\n";
 	}
+
   return max;
 }
 #endif
