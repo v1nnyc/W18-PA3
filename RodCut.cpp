@@ -65,12 +65,13 @@ int findMax(){
 			}
 		}	
 	}
-	arr->printOut();
+
 	return max;
 }
 
 int rodcut(std::map<int, int> prices, int length) {
 	set(&prices, length);
+
 	return findMax();
 }
 #endif
