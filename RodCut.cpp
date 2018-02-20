@@ -12,64 +12,65 @@
 #include "TwoD_Array.hpp"
 #include <iostream>
 
-int rodcut(std::map<int, int> prices, int length) {
-	int rows = prices.size() + 1;
-	int cols =  length + 1;
-	int max = 0;
+int cols;
+TwoD_Array<int> * arr;
+std::map<int, int> * price_map;
 
-
-	//finding max in list
-	auto x = std::max_element(prices.begin(), prices.end(),
-    [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
-        return p1.second < p2.second; });
-
-
-	TwoD_Array<int> * arr = new TwoD_Array<int>(x->first, cols);
-
-	//first length will always be 1
+//first length will always be 1
+void firstLengthSet(){
 	for(int i = 0; i <= cols; i++){
-		int value =0;
-		if(1 <= i){
+		if(1 <= i) 
 			arr->at(1, i) = i;
-		}
 	}
+}
 
-	int value; 
-	for(auto it = next(prices.begin(),1); it != prices.end(); it++){
-		for(int j = 0; j < cols; j++){
-			if(it->first > j){
-				value = arr->at((prev(it,1))->first, j);
-				if(value > max) max = value;
-				arr->at(it->first, j) = value;
-			}
-			if(it->first == j){
-				value = MAX(arr->at((prev(it,1))->first, j), it->second);
-				if(value > max) max = value;
-				arr->at(it->first, j) = value;
-			}
-			if(it->first < j){
-				int use = (j / it->first) * it->second;
-				if((j%it->first) != 0){
-					use +=arr->at((prev(it,1))->first, (j%it->first));
-				}
-				value = MAX(arr->at((prev(it,1))->first, j), use);
-				if(value > max) max = value;
-				arr->at(it->first, j) = value;
+void set(std::map<int, int> * prices, int length){
+	price_map = prices;
+	cols = length + 1;
+	arr = new TwoD_Array<int>(std::max_element(price_map->begin(), price_map->end(),
+    [](const std::pair<int, int>& p1, const std::pair<int, int>& p2) {
+        return p1.second < p2.second; })->second, cols);
+	firstLengthSet();
+}
 
+int findMax(){
+	int max = 0;
+	int value;
+	//go through price map
+	for(auto price_it = next(price_map->begin(),1); price_it != price_map->end(); price_it++){
+		//for each amount of cuts, determine how much money can be made
+		int cut_amounts = price_it->first;
+		for(int curr = 0; curr < cols; curr++){
+			if(cut_amounts > curr){
+				value = arr->at((prev(price_it,1))->first, curr);
+				if(value > max) 
+					max = value;
+				arr->at(cut_amounts, curr) = value;
+			}
+			if(cut_amounts < curr){
+				int use = (curr / cut_amounts) * price_it->second;
+				if((curr%cut_amounts) != 0)
+					use +=arr->at((prev(price_it,1))->first, (curr%cut_amounts));
+				value = MAX(arr->at((prev(price_it,1))->first, curr), use);
+				if(value > max) 
+					max = value;
+				arr->at(cut_amounts, curr) = value;
+
+			}
+			if(cut_amounts == curr){
+				value = MAX(arr->at((prev(price_it,1))->first, curr), price_it->second);
+				if(value > max) 
+					max = value;
+				arr->at(cut_amounts, curr) = value;
 			}
 		}	
 	}
+	arr->printOut();
+	return max;
+}
 
-	/*
-	for(int i = 1; i <= arr->getNumRows(); i++){
-		for(int j = 0; j < arr->getNumCols(); j++){
-			std::cout<< arr->at(i, j) << "  ";
-		}
-		std::cout<<"\n";
-	}
-	*/
-	
-
-  return max;
+int rodcut(std::map<int, int> prices, int length) {
+	set(&prices, length);
+	return findMax();
 }
 #endif
