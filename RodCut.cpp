@@ -48,24 +48,21 @@ int findMax(){
 		for(int curr = 0; curr < cols; curr++){
 			if(cut_amounts > curr){
 				value = arr->at((prev(price_it,1))->first, curr);
-				if(value > max) 
-					max = value;
+				max = (value > max)? max = value : max;
 				arr->at(cut_amounts, curr) = value;
 			}
 			if(cut_amounts < curr){
 				int use = (curr / cut_amounts) * price_it->second;
-				if((curr%cut_amounts) != 0)
-					use +=arr->at((prev(price_it,1))->first, (curr%cut_amounts));
+				use += ((curr%cut_amounts) != 0)? arr->at((prev(price_it,1))->first,
+				 (curr%cut_amounts)): 0;
 				value = MAX(arr->at((prev(price_it,1))->first, curr), use);
-				if(value > max) 
-					max = value;
+				max = (value > max)? max = value : max;
 				arr->at(cut_amounts, curr) = value;
 
 			}
 			if(cut_amounts == curr){
 				value = MAX(arr->at((prev(price_it,1))->first, curr), price_it->second);
-				if(value > max) 
-					max = value;
+				max = (value > max)? max = value : max;
 				arr->at(cut_amounts, curr) = value;
 			}
 		}	

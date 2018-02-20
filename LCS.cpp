@@ -63,7 +63,6 @@ std::string findLCS(){
 			first--;
 		else 
 			second--;
-
 	}
 
 	return str;

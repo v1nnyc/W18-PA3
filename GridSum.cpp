@@ -5,57 +5,55 @@
 // Sources of Help: TODO
 // Due: February 23rd, 2018 at 11:59 PM
 
+/* to run:
+make TestGridSum
+build/TestGridSum testcases/gridSum1.txt 
+*/
+
 #ifndef __GRID_SUM_CPP__
 #define __GRID_SUM_CPP__
 
 #include "TwoD_Array.hpp"
 #include "GridSum.hpp"
 
-TwoD_Array<int>* graph = NULL;
+TwoD_Array<int>* graph;
 
-// Perform the precomputation step here
-GridSum::GridSum (TwoD_Array<int>& grid) {
-	for(int rows = 0; rows < grid.getNumRows(); rows++){
-		for(int cols = 0; cols < grid.getNumCols(); cols++ ){
-			if(cols != 0){
-				grid.at(rows, cols) = grid.at(rows, cols) + grid.at(rows, cols-1);
-			}
-		}
-	}
-
-	for(int cols = 0; cols < grid.getNumCols(); cols++ ){
-		for(int rows = 0; rows < grid.getNumRows(); rows++){
-			if(rows != 0){
-				grid.at(rows, cols) = grid.at(rows, cols) + grid.at(rows-1, cols);
-			}
-		}
-	}
+void set(TwoD_Array<int>& grid){
 	graph = &grid;
 }
 
-// Perform the query step here
+void setArray(bool rows){
+	auto out = (rows)? graph->getNumRows(): graph->getNumCols();
+	auto in = (!rows)? graph->getNumCols(): graph->getNumRows();
+	for(int outer = 0; outer < out; outer++){
+		for(int inner = 0; inner < in; inner++ ){
+			if(inner != 0){
+				graph->at(outer, inner) = graph->at(outer, inner) + 
+				((rows)? graph->at(outer, inner-1): graph->at(outer-1, inner));
+			}
+		}
+	}
+}
+
+GridSum::GridSum (TwoD_Array<int>& grid) {
+	set(grid);
+	setArray(true);
+	setArray(false);
+}
+
+int addSum(int x1, int y1, int x2, int y2){
+	int first = graph->at(x2,y2);
+	int second = (x1 != 0) ? graph->at(x1-1,y2) : 0;
+	int third = (y1 != 0)? graph->at(x2,y1-1) : 0;
+	int fourth = (y1 != 0 && x1 != 0)? graph->at(x1-1,y1-1) : 0;
+
+	return first - second - third + fourth;
+}
+
 int GridSum::query (int x1, int y1, int x2, int y2) {
 	graph->printOut();
-	std::cout<<graph->at(x1,y1) << "\n";
-	std::cout<<graph->at(x2,y2) << "\n";
 
-	int first = 0;
-	if(x1 != 0){
-		first = graph->at(x1-1,y2);
-	}
-	std::cout<<first << "\n";
-	int second = 0;
-	if(y1 != 0){
-		second = graph->at(x2,y1-1);
-	}
-std::cout<<second << "\n";
-	int third = 0;
-	if(y1 != 0 && x1 != 0){
-		third = graph->at(x1-1,y1-1);
-	}
-std::cout<<third << "\n";
-	return graph->at(x2,y2) - first - second + third;
-  return 0;
+	return addSum(x1, y1, x2, y2);
 }
 
 #endif
