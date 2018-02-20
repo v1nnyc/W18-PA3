@@ -5,6 +5,11 @@
 // Sources of Help: lecture slides
 // Due: February 23rd, 2018 at 11:59 PM
 
+/* to run:
+make TestLCS
+build/TestLCS testcases/lcs1.txt
+*/
+
 #ifndef __LCS_CPP__
 #define __LCS_CPP__
 

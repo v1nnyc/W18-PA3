@@ -5,6 +5,11 @@
 // Sources of Help: TODO
 // Due: February 23rd, 2018 at 11:59 PM
 
+/* to run:
+make TestRodCut
+build/TestRodCut testcases/rod-22.txt
+*/
+
 #ifndef __RODCUT_CPP__
 #define __RODCUT_CPP__
 
