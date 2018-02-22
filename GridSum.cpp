@@ -22,6 +22,8 @@ void set(TwoD_Array<int>& grid){
 	graph = &grid;
 }
 
+//true for outer:rows/inner:cols + cols-1
+//false for outer:cols/inner:rows + rows-1
 void setArray(bool rows){
 	auto out = (rows)? graph->getNumRows(): graph->getNumCols();
 	auto in = (!rows)? graph->getNumCols(): graph->getNumRows();
@@ -47,12 +49,10 @@ int addSum(int x1, int y1, int x2, int y2){
 	int third = (y1 != 0)? graph->at(x2,y1-1) : 0;
 	int fourth = (y1 != 0 && x1 != 0)? graph->at(x1-1,y1-1) : 0;
 
-	return first - second - third + fourth;
+	return first - (second + third) + fourth;
 }
 
 int GridSum::query (int x1, int y1, int x2, int y2) {
-	graph->printOut();
-
 	return addSum(x1, y1, x2, y2);
 }
 

@@ -45,7 +45,7 @@ void setArray(){
 }
 
 std::string findLCS(){
-	//creating char array to return
+	//instantiating char array to return
 	int index = arr->at(string1.length(), string2.length());
 	char str[index+1];
 	str[index] = '\0';

@@ -19,7 +19,9 @@ DP respectively.
 #include "USB.hpp"
 #include "TwoD_Array.hpp"
 
+int count = 0; 
 int find_files_naive(int USBsize, std::vector<int>& files) {
+	count++;
   int min = -1;
   for (auto it = files.begin(); it != files.end(); ++it) {
     if (USBsize == *it) {   // 1 is the minimum number of possible files
@@ -34,7 +36,9 @@ int find_files_naive(int USBsize, std::vector<int>& files) {
     }
     // do nothing if file size is larger than the USB size
   }
+  std::cout<<count<<"\n";
   return min;
+
 }
 
 std::map<int, int> memoize;
@@ -74,21 +78,30 @@ int find_files_memoized(int USBsize, std::vector<int>& files) {
   return min;
 }
 
-int find_files_dp(int USBsize, std::vector<int>& files) {
-  int cols = USBsize + 1;
-  TwoD_Array<int> * arr = new TwoD_Array<int>(*std::max_element(files.begin(),files.end())+1, USBsize+1);
+int value;
+TwoD_Array<int> * arr;
+std::vector<int>* filesPoint;
+
+void set(std::vector<int>& files, int USBsize){
+  filesPoint = &files;
+  arr = new TwoD_Array<int>(*std::max_element(files.begin(),files.end())+1, USBsize+1);
   for(int i = 0; i <= USBsize; i++){
     if(1 <= i) 
       arr->at(1, i) = i;
   }
   std::sort (files.begin(), files.end()); 
+}
 
-  int value;
+int find_files_dp(int USBsize, std::vector<int>& files) {
+  //TwoD_Array<int> * 
+  
+  set(files, USBsize);
+
   //go through price map
   for(auto file_sizeit = next(files.begin(),1); file_sizeit != files.end(); file_sizeit++){
     //for each amount of cuts, determine how much money can be made
     int file_size = *file_sizeit;
-    for(int curr = 0; curr < cols; curr++){
+    for(int curr = 0; curr < USBsize + 1; curr++){
       if(file_size > curr){
         value = arr->at(*(prev(file_sizeit,1)), curr);
         arr->at(file_size, curr) = value;
