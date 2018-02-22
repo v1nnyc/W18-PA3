@@ -21,7 +21,6 @@ DP respectively.
 
 int count = 0; 
 int find_files_naive(int USBsize, std::vector<int>& files) {
-	count++;
   int min = -1;
   for (auto it = files.begin(); it != files.end(); ++it) {
     if (USBsize == *it) {   // 1 is the minimum number of possible files
@@ -36,7 +35,6 @@ int find_files_naive(int USBsize, std::vector<int>& files) {
     }
     // do nothing if file size is larger than the USB size
   }
-  std::cout<<count<<"\n";
   return min;
 
 }
