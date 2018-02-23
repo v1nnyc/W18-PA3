@@ -16,6 +16,8 @@ build/TestGridSum testcases/gridSum1.txt
 #include "TwoD_Array.hpp"
 #include "GridSum.hpp"
 
+#include <algorithm>
+
 TwoD_Array<int>* graph;
 
 void set(TwoD_Array<int>& grid){

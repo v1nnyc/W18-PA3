@@ -16,6 +16,7 @@ build/TestRodCut testcases/rod-22.txt
 #include "RodCut.hpp"
 #include "TwoD_Array.hpp"
 #include <iostream>
+#include <algorithm>
 
 int cols;
 TwoD_Array<int> * arr;
