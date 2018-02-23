@@ -16,6 +16,7 @@ DP respectively.
 #define __USB_CPP__
 
 #include <map>
+#include <algorithm>
 #include "USB.hpp"
 #include "TwoD_Array.hpp"
 
